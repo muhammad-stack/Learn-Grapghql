@@ -3,7 +3,7 @@ import { ApolloServer } from "@apollo/server";
 import { Product } from "@/app/types/type";
 
 const gql = String.raw;
-const dunmmyProducts = [
+let dunmmyProducts = [
   {
     id: 1,
     title: "iPhone 9",
@@ -56,7 +56,6 @@ const dunmmyProducts = [
     thumbnail: "https://cdn.dummyjson.com/product-images/3/thumbnail.jpg",
     images: ["https://cdn.dummyjson.com/product-images/3/1.jpg"],
   },
-  
 ];
 const typeDefs = gql`
   type Query {
@@ -66,32 +65,33 @@ const typeDefs = gql`
 
   type Mutation {
     createProduct(products: Producttype): Product
+    deleteProduct(id: Int): String
   }
   input Producttype {
-    id: ID!
-    title: String!
-    description: String!
-    price: Float!
-    discountPercentage: Float!
-    rating: Float!
-    stock: Int!
-    brand: String!
-    category: String!
-    thumbnail: String!
-    images: [String!]!
+    id: ID
+    title: String
+    description: String
+    price: Float
+    discountPercentage: Float
+    rating: Float
+    stock: Int
+    brand: String
+    category: String
+    thumbnail: String
+    images: [String]
   }
   type Product {
-    id: ID!
-    title: String!
-    description: String!
-    price: Float!
-    discountPercentage: Float!
-    rating: Float!
-    stock: Int!
-    brand: String!
-    category: String!
-    thumbnail: String!
-    images: [String!]!
+    id: ID
+    title: String
+    description: String
+    price: Float
+    discountPercentage: Float
+    rating: Float
+    stock: Int
+    brand: String
+    category: String
+    thumbnail: String
+    images: [String]
   }
 `;
 const resolvers = {
@@ -107,7 +107,7 @@ const resolvers = {
     createProduct: (
       root: {},
       args: {
-        products: Product;
+        products: {};
       },
       context: {},
       info: {}
@@ -115,6 +115,20 @@ const resolvers = {
       console.log(args, "args");
       dunmmyProducts.push(args.products);
       return args.products;
+    },
+
+    deleteProduct: (
+      root: {},
+      args: {
+        id: number;
+      },
+      context: {},
+      info: {}
+    ) => {
+      dunmmyProducts = dunmmyProducts.filter(
+        (product) => product.id !== args.id
+      );
+      return "Product is Sucssefully deleted";
     },
   },
 };
